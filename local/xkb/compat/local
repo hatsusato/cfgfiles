@@ -1,0 +1,5 @@
+partial xkb_compatibility "overlay" {
+  interpret Overlay1_Enable {
+    action= SetControls(controls=Overlay1);
+  };
+};

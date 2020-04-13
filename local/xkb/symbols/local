@@ -1,0 +1,8 @@
+partial modifier_keys
+xkb_symbols "auron-paine" {
+  key <LWIN> { [ Control_L ] };
+  key <LCTL> { [ Super_L ] };
+  modifier_map Control { <LWIN> };
+  modifier_map Mod4    { <LCTL> };
+  include "local-overlay(rctl)"
+};
