@@ -5,7 +5,7 @@ stty lnext $'\cQ'
 command xkbset nullify lock
 
 #export GROFF_NO_SGR=1
-export LESS='-M -N -R -S -W -x4'
+export LESS='-M -R -S -x4'
 export LESSHISTFILE=/dev/null
 export LESSSECURE=1
 
@@ -18,5 +18,5 @@ fi
 unset dir sh
 
 if [ -f ~/.bashrc.private ]; then
-    . ~/.bashrc.private
+  . ~/.bashrc.private
 fi
