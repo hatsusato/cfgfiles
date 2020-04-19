@@ -10,6 +10,7 @@ command xkbset nullify lock
 export LESS='-M -R -S -x4'
 export LESSHISTFILE=/dev/null
 export LESSSECURE=1
+export PS1='\[\033[01;31m\]$?\[\033[00m\]'$PS1
 
 dir=${XDG_CONFIG_HOME:-$HOME/.config}/local/shell-function
 if [[ -d $dir && -r $dir && -x $dir ]]; then
