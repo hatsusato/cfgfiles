@@ -1,6 +1,8 @@
 set +o ignoreeof
+stty kill undef # unix-line-discard
 stty stop undef
 stty start undef
+stty werase undef # unix-word-rubout
 stty lnext $'\cQ'
 command xkbset nullify lock
 
