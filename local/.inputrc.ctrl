@@ -1,0 +1,46 @@
+#"\C-?": backward-delete-char
+"\C-a": beginning-of-line
+"\C-b": shell-backward-word
+#"\C-c":
+"\C-d": vi-delete
+"\C-d\C-a": backward-kill-line
+"\C-d\C-b": "\e@set-mark\e@shell-backward-word\e@kill-region"
+"\C-d\C-d": kill-whole-line
+"\C-d\C-e": kill-line
+"\C-d\C-h": backward-delete-char
+"\C-d\C-j": backward-kill-word
+"\C-d\C-k": kill-word
+"\C-d\C-l": delete-char-or-list
+"\C-d\C-s": delete-horizontal-space
+"\C-d\C-v": kill-region
+"\C-d\C-w": "\e@set-mark\e@shell-forward-word\e@kill-region"
+"\C-d\C-x": forward-backward-delete-char
+"\C-e": end-of-line
+"\C-f": character-search
+"\C-@\C-f": character-search-backward
+"\C-g": abort
+"\C-h": backward-char
+"\C-i": menu-complete
+"\e[Z": menu-complete-backward
+"\C-@\C-i": "\e@shell-expand-line\e@glob-expand-word\e@tilde-expand"
+"\C-j": backward-word
+"\C-k": forward-word
+"\C-l": forward-char
+"\C-m": accept-line
+"\C-n": next-history
+"\C-@\C-n": history-search-forward
+#"\C-o":
+"\C-p": previous-history
+"\C-@\C-p": history-search-backward
+"\C-q": quoted-insert
+"\C-r": reverse-search-history
+"\C-s": forward-search-history
+"\C-t": transpose-chars
+"\C-@\C-t": transpose-words
+"\C-u": undo
+"\C-v": set-mark
+"\C-@\C-v": exchange-point-and-mark
+"\C-w": shell-forward-word
+"\C-y": yank
+"\C-@\C-y": yank-pop
+#"\C-z":

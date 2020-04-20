@@ -1,0 +1,23 @@
+$include ~/.config/local/.inputrc.var
+
+set keymap emacs
+"\C-xvi": vi-editing-mode
+
+set keymap vi-insert
+$include ~/.config/local/.inputrc.all
+$include ~/.config/local/.inputrc.ctrl
+"\C-@\C-@": vi-movement-mode
+"\C-x\C-b": complete-into-braces
+"\C-x\C-i": dabbrev-expand
+"\C-x\C-l": clear-screen
+"\C-x\C-r": re-read-init-file
+"\C-x\C-v": "\e@end-of-line | less"
+"\C-xemacs": emacs-editing-mode
+
+set keymap vi-command
+$include ~/.config/local/.inputrc.all
+$include ~/.config/local/.inputrc.ctrl
+"v": set-mark
+"\C-x\C-l": clear-screen
+"\C-x\C-r": re-read-init-file
+"\C-xemacs": emacs-editing-mode
