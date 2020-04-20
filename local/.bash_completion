@@ -1,0 +1,73 @@
+#!/bin/bash
+
+exist-alias() {
+  [[ -n $1 ]] || return
+  [[ -n ${BASH_ALIASES[$1]+x} ]] || return
+  echo "${BASH_ALIASES[$1]}"
+}
+
+expand-alias() {
+  local IFS cmd words line
+  IFS=' '
+  cmd=$COMP_WORDS
+  words=($(exist-alias "$cmd")) || return
+  line=${words[*]}
+  ((COMP_CWORD += ${#words[@]} - 1))
+  ((COMP_POINT += ${#line} - ${#cmd}))
+  COMP_LINE=$line${COMP_LINE#$cmd}
+  COMP_WORDS=("${words[@]}" "${COMP_WORDS[@]:1}")
+}
+
+emulate-complete() {
+  local cur prev words cword cmd
+  _init_completion || return
+  cmd=$words
+  set -- $(complete -p "$cmd")
+  # assert: [[ $1 == complete ]]
+  # assert: [[ ${@: -1} == $cmd ]]
+  shift
+  local opts=()
+  while ((1 < $#)); do
+    case $1 in
+      -[abcdefgjksuv])
+        opts+=($1)
+        shift;;
+      -o)
+        compopt -o "$2" >/dev/null
+        shift 2;;
+      -F)
+        eval "$2" "$cmd" "$cur" "$prev"
+        return $?;;
+      -[AGWCXPS])
+        eval opts+=($1 "$2")
+        shift 2;;
+      *)
+        echo "ERROR: invalid complete: "$(complete -p "$cmd") >&2
+        return 1;;
+    esac
+  done
+  COMPREPLY=($(compgen "${opts[@]}" -- "$cur"))
+}
+
+alias-complete() {
+  local cmd comp
+  expand-alias || return
+  cmd=$COMP_WORDS
+  if comp=$(complete -p "$cmd" 2>/dev/null); then
+    if [[ " $comp " =~ ' -F alias-complete ' ]]; then
+      complete -F _minimal -- "$cmd" && return 124
+    else
+      emulate-complete
+    fi
+  else
+    _completion_loader "$cmd"
+  fi
+}
+
+auto-completion-loader() {
+  __load_completion "$1" && return 124
+  if exist-alias "$1" >/dev/null; then
+    complete -F alias-complete -- "$1" && return 124
+  fi
+  complete -F _minimal -- "$1" && return 124
+} && complete -D -F auto-completion-loader
