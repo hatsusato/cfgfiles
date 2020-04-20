@@ -21,7 +21,7 @@ xkb_symbols "fnkey" {
   key <FK02> { overlay1=<I167> };
   key <FK03> { overlay1=<I181> };
   key <FK04> { overlay1=<FK11> };
-  key <FK05> { overlay1=<SUPR> };
+  key <FK05> { overlay1=<I235> };
   key <FK06> { overlay1=<I232> };
   key <FK07> { overlay1=<I233> };
   key <FK08> { overlay1=<MUTE> };
@@ -31,12 +31,12 @@ xkb_symbols "fnkey" {
 
 hidden partial alphanumeric_keys
 xkb_symbols "media" {
-  key <SUPR> { [ Super_L ] };
   key <I166> { [ XF86Back ] };
   key <I167> { [ XF86Forward ] };
   key <I181> { [ XF86Reload ] };
   key <I232> { [ XF86MonBrightnessDown ] };
   key <I233> { [ XF86MonBrightnessUp ] };
+  key <I235> { [ XF86Display ] };
   key <MUTE> { [ XF86AudioMute ] };
   key <VOL-> { [ XF86AudioLowerVolume ] };
   key <VOL+> { [ XF86AudioRaiseVolume ] };
