@@ -1,0 +1,10 @@
+#!/bin/bash
+
+_sshfs-close() {
+  local cur prev words cword
+  _init_completion || return
+  local script='{ if ($3 ~ /^fuse.sshfs$/) print $2 }'
+  local list=$(awk "$script" /etc/mtab 2>/dev/null)
+  COMPREPLY=($(compgen -W "$list" -- "$cur"))
+}
+complete -F _sshfs-close sshfs-close
