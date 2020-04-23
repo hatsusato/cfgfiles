@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-dirs := git local bash-completion
+dirs := bash-completion git local xkb
 files := $(shell git ls-files $(dirs))
 prefix := $(HOME)/.config
 target := $(addprefix $(prefix)/,$(files))
