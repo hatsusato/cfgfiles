@@ -7,7 +7,7 @@ stty lnext $'\cQ'
 command xkbset nullify lock
 
 #export GROFF_NO_SGR=1
-export LESS='-M -R -S -x4'
+export LESS='-M -R -x4'
 export LESSHISTFILE=/dev/null
 export LESSSECURE=1
 export PS1='\[\033[01;31m\]$?\[\033[00m\]'$PS1
