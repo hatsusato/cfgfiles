@@ -20,9 +20,7 @@
 "\C-@\C-f": character-search-backward
 "\C-g": abort
 "\C-h": backward-char
-"\C-i": menu-complete
-"\e[Z": menu-complete-backward
-"\C-@\C-i": "\e@shell-expand-line\e@glob-expand-word\e@tilde-expand"
+"\C-i": complete
 "\C-j": backward-word
 "\C-k": forward-word
 "\C-l": forward-char

@@ -7,12 +7,14 @@ set keymap vi-insert
 $include ~/.config/local/.inputrc.all
 $include ~/.config/local/.inputrc.ctrl
 "\C-@\C-@": vi-movement-mode
+"\C-@\C-i": "\e@shell-expand-line\e@glob-expand-word\e@tilde-expand"
 "\C-x\C-b": complete-into-braces
 "\C-x\C-i": dabbrev-expand
 "\C-x\C-l": clear-screen
 "\C-x\C-r": re-read-init-file
 "\C-x\C-v": "\e@end-of-line | less"
 "\C-xemacs": emacs-editing-mode
+"\e[Z": menu-complete
 
 set keymap vi-command
 $include ~/.config/local/.inputrc.all
