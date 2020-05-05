@@ -1,5 +1,35 @@
 #!/bin/bash
 
+emulate-complete() {
+  local cur prev words cword
+  _init_completion || return
+  set -- $(complete -p $words)
+  [[ $1 == complete ]] || return
+  [[ ${@: -1} == $words ]] || return
+  shift
+  local opts=()
+  while ((1 < $#)); do
+    case $1 in
+      -[abcdefgjksuv])
+        opts+=($1)
+        shift;;
+      -o)
+        compopt -o $2 >/dev/null
+        shift 2;;
+      -F)
+        $2 $words $cur $prev
+        return $?;;
+      -[AGWCXPS])
+        opts+=($1 $2)
+        shift 2;;
+      *)
+        echo ERROR: invalid complete: $(complete -p $words) >&2
+        return 1;;
+    esac
+  done
+  COMPREPLY=($(compgen ${opts[@]} -- $cur))
+}
+
 parse-quote-words() {
   COMP_WORDS=()
   local list=() arg i c q=
@@ -27,37 +57,6 @@ replace-command() {
   COMP_WORDS+=("${words[@]:1}")
   COMP_LINE=${COMP_WORDS[@]}
   COMP_CWORD=${#COMP_WORDS[@]}
-}
-
-emulate-complete() {
-  local cur prev words cword cmd
-  _init_completion || return
-  cmd=$words
-  set -- $(complete -p "$cmd")
-  # assert: [[ $1 == complete ]]
-  # assert: [[ ${@: -1} == $cmd ]]
-  shift
-  local opts=()
-  while ((1 < $#)); do
-    case $1 in
-      -[abcdefgjksuv])
-        opts+=($1)
-        shift;;
-      -o)
-        compopt -o "$2" >/dev/null
-        shift 2;;
-      -F)
-        eval "$2" "$cmd" "$cur" "$prev"
-        return $?;;
-      -[AGWCXPS])
-        eval opts+=($1 "$2")
-        shift 2;;
-      *)
-        echo "ERROR: invalid complete: "$(complete -p "$cmd") >&2
-        return 1;;
-    esac
-  done
-  COMPREPLY=($(compgen "${opts[@]}" -- "$cur"))
 }
 
 exist-alias() {
