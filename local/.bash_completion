@@ -65,18 +65,15 @@ exist-alias() {
 }
 
 alias-complete() {
-  local cmd comp
-  exist-alias "$COMP_WORDS" || return
+  exist-alias $COMP_WORDS || return
   replace-command ${BASH_ALIASES[$COMP_WORDS]}
-  cmd=$COMP_WORDS
-  if comp=$(complete -p "$cmd" 2>/dev/null); then
-    if [[ " $comp " =~ ' -F alias-complete ' ]]; then
-      complete -F _minimal -- "$cmd" && return 124
-    else
-      emulate-complete
-    fi
+  local comp=$(complete -p $COMP_WORDS 2>/dev/null)
+  if [[ -z $comp ]]; then
+    _completion_loader $COMP_WORDS
+  elif [[ $comp == *+( )-F+( )alias-complete?( *) ]]; then
+    complete -F _minimal -- $COMP_WORDS && return 124
   else
-    _completion_loader "$cmd"
+    emulate-complete
   fi
 }
 
