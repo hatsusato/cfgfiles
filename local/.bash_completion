@@ -19,6 +19,15 @@ parse-quote-words() {
   done
   [[ -z $q ]] || COMP_WORDS+=("${list[*]}")
 }
+replace-command() {
+  local words=("${COMP_WORDS[@]}")
+  parse-quote-words "$@"
+  COMP_LINE=${COMP_WORDS[@]}
+  ((COMP_POINT += ${#COMP_LINE} - ${#words}))
+  COMP_WORDS+=("${words[@]:1}")
+  COMP_LINE=${COMP_WORDS[@]}
+  COMP_CWORD=${#COMP_WORDS[@]}
+}
 
 exist-alias() {
   [[ -n $1 ]] || return
@@ -27,15 +36,8 @@ exist-alias() {
 }
 
 expand-alias() {
-  local IFS cmd words line
-  IFS=' '
-  cmd=$COMP_WORDS
-  words=($(exist-alias "$cmd")) || return
-  line=${words[*]}
-  ((COMP_CWORD += ${#words[@]} - 1))
-  ((COMP_POINT += ${#line} - ${#cmd}))
-  COMP_LINE=$line${COMP_LINE#$cmd}
-  COMP_WORDS=("${words[@]}" "${COMP_WORDS[@]:1}")
+  exist-alias "$COMP_WORDS" >/dev/null || return
+  replace-command ${BASH_ALIASES[$COMP_WORDS]}
 }
 
 emulate-complete() {
