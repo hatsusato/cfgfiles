@@ -1,5 +1,25 @@
 #!/bin/bash
 
+parse-quote-words() {
+  COMP_WORDS=()
+  local list=() arg i c q=
+  for arg in "$@"; do
+    list+=("$arg")
+    if [[ $q == *@(\'|\")* ]]; then
+      for ((i=0; i<${#arg}; ++i)); do
+        c=${arg:i:1}
+        [[ $c == @(\'|\") ]] || continue
+        [[ -z $q || $c == $q ]] || continue
+        q=${c#$q}
+      done
+    fi
+    [[ -z $q ]] || continue
+    COMP_WORDS+=("${list[*]}")
+    list=()
+  done
+  [[ -z $q ]] || COMP_WORDS+=("${list[*]}")
+}
+
 exist-alias() {
   [[ -n $1 ]] || return
   [[ -n ${BASH_ALIASES[$1]+x} ]] || return
