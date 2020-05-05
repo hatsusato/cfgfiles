@@ -35,11 +35,6 @@ exist-alias() {
   echo "${BASH_ALIASES[$1]}"
 }
 
-expand-alias() {
-  exist-alias "$COMP_WORDS" >/dev/null || return
-  replace-command ${BASH_ALIASES[$COMP_WORDS]}
-}
-
 emulate-complete() {
   local cur prev words cword cmd
   _init_completion || return
@@ -73,7 +68,8 @@ emulate-complete() {
 
 alias-complete() {
   local cmd comp
-  expand-alias || return
+  exist-alias "$COMP_WORDS" >/dev/null || return
+  replace-command ${BASH_ALIASES[$COMP_WORDS]}
   cmd=$COMP_WORDS
   if comp=$(complete -p "$cmd" 2>/dev/null); then
     if [[ " $comp " =~ ' -F alias-complete ' ]]; then
