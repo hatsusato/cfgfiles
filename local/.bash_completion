@@ -29,12 +29,6 @@ replace-command() {
   COMP_CWORD=${#COMP_WORDS[@]}
 }
 
-exist-alias() {
-  [[ -n $1 ]] || return
-  [[ -n ${BASH_ALIASES[$1]+x} ]] || return
-  echo "${BASH_ALIASES[$1]}"
-}
-
 emulate-complete() {
   local cur prev words cword cmd
   _init_completion || return
@@ -66,9 +60,13 @@ emulate-complete() {
   COMPREPLY=($(compgen "${opts[@]}" -- "$cur"))
 }
 
+exist-alias() {
+  [[ -n $@ && -n ${BASH_ALIASES[$@]+x} ]]
+}
+
 alias-complete() {
   local cmd comp
-  exist-alias "$COMP_WORDS" >/dev/null || return
+  exist-alias "$COMP_WORDS" || return
   replace-command ${BASH_ALIASES[$COMP_WORDS]}
   cmd=$COMP_WORDS
   if comp=$(complete -p "$cmd" 2>/dev/null); then
@@ -84,7 +82,7 @@ alias-complete() {
 
 auto-completion-loader() {
   __load_completion "$1" && return 124
-  if exist-alias "$1" >/dev/null; then
+  if exist-alias "$1"; then
     complete -F alias-complete -- "$1" && return 124
   fi
   complete -F _minimal -- "$1" && return 124
