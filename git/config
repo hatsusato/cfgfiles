@@ -1,2 +1,3 @@
 [include]
-	path = config.local
+path = config.local
+path = user.config
