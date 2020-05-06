@@ -84,8 +84,9 @@ auto-completion-loader() {
 } && complete -D -F auto-completion-loader
 
 debug-complete() {
-  local comp log=${DEBUG+/tmp/xtrace.log}
+  local comp log=${DEBUG+/tmp/$USER/debug.log}
   for comp in words point line cword; do
     declare -p COMP_${comp^^}
   done >>${log:-/dev/null}
+  echo >>${log:-/dev/null}
 }
