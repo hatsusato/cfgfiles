@@ -31,7 +31,6 @@ emulate-complete() {
 }
 
 parse-quote-words() {
-  COMP_WORDS=()
   local list=() arg i c q=
   for arg in "$@"; do
     list+=("$arg")
@@ -44,19 +43,19 @@ parse-quote-words() {
       done
     fi
     [[ -z $q ]] || continue
-    COMP_WORDS+=("${list[*]}")
+    quotes+=("${list[*]}")
     list=()
   done
-  [[ -z $q ]] || COMP_WORDS+=("${list[*]}")
+  [[ -z $q ]] || quotes+=("${list[*]}")
 }
 replace-command() {
-  local words=("${COMP_WORDS[@]}")
+  local quotes=()
   parse-quote-words "$@"
-  COMP_LINE=${COMP_WORDS[@]}
-  ((COMP_POINT += ${#COMP_LINE} - ${#words}))
-  COMP_WORDS+=("${words[@]:1}")
-  COMP_LINE=${COMP_WORDS[@]}
-  COMP_CWORD=${#COMP_WORDS[@]}
+  local line=${quotes[@]}
+  COMP_LINE=${COMP_LINE/#$COMP_WORDS/$line}
+  ((COMP_POINT += ${#line} - ${#COMP_WORDS}))
+  ((COMP_CWORD += ${#quotes[@]} - 1))
+  COMP_WORDS=("${quotes[@]}" "${COMP_WORDS[@]:1}")
 }
 
 exist-alias() {
