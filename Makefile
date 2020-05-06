@@ -9,4 +9,4 @@ target := $(addprefix $(prefix)/,$(files))
 all: $(target)
 
 $(target): $(prefix)/%: %
-	@./deploy.sh $< $@
+	@install -D -m644 -v -T $< $@
