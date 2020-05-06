@@ -82,3 +82,10 @@ auto-completion-loader() {
   fi
   complete -F _minimal -- "$1" && return 124
 } && complete -D -F auto-completion-loader
+
+debug-complete() {
+  local comp log=${DEBUG+/tmp/xtrace.log}
+  for comp in words point line cword; do
+    declare -p COMP_${comp^^}
+  done >>${log:-/dev/null}
+}
