@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-dirs := git local xkb
+dirs := fcitx git local xkb
 files := $(shell git ls-files $(dirs))
 prefix := $(HOME)/.config
 target := $(addprefix $(prefix)/,$(files))
