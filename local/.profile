@@ -1,2 +1,3 @@
 export PASSWORD_STORE_GENERATED_LENGTH=32
-mkdir -p /tmp/downloads
+mkdir -m700 -p /tmp/$USER
+mkdir -m700 -p /tmp/$USER/downloads
