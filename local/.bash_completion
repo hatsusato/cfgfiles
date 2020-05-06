@@ -34,7 +34,7 @@ parse-quote-words() {
   local list=() arg i c q=
   for arg in "$@"; do
     list+=("$arg")
-    if [[ $q == *@(\'|\")* ]]; then
+    if [[ $arg == *@(\'|\")* ]]; then
       for ((i=0; i<${#arg}; ++i)); do
         c=${arg:i:1}
         [[ $c == @(\'|\") ]] || continue
