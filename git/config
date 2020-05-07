@@ -1,5 +1,4 @@
 [include]
-path = config.local
 path = alias.config
 path = core.config
 path = color.config
