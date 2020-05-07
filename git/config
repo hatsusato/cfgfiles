@@ -3,5 +3,4 @@ path = config.local
 path = alias.config
 path = core.config
 path = color.config
-path = others.config
 path = user.config
