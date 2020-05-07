@@ -1,3 +1,4 @@
 [include]
 path = config.local
+path = core.config
 path = user.config
