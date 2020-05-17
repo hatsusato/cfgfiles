@@ -4,7 +4,9 @@ stty stop undef
 stty start undef
 stty werase undef # unix-word-rubout
 stty lnext $'\cQ'
-command -p xkbset nullify lock
+if [ -x /usr/bin/xkbset ]; then
+  xkbset nullify lock
+fi
 
 #export GROFF_NO_SGR=1
 export LESS='-M -R -x4'
