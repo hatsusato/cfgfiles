@@ -9,7 +9,7 @@ set colored-stats on
 set completion-ignore-case on
 set completion-map-case on
 #set completion-prefix-display-length 0
-set completion-query-items 0
+set completion-query-items 80
 #set convert-meta off
 #set disable-completion off
 #set echo-control-characters on
