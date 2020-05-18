@@ -17,4 +17,8 @@ fi
 export LESS='-M -R -x4'
 export LESSHISTFILE=/dev/null
 export LESSSECURE=1
-export PS1='\[\033[01;31m\]$?\[\033[00m\]'$PS1
+if [ -x /usr/bin/tput ] && tput setaf 1 &>/dev/null; then
+  export PS1='\[\033[01;31m\]$?\[\033[00m\]'$PS1
+else
+  export PS1='$?'$PS1
+fi
