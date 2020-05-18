@@ -1,9 +1,11 @@
 set +o ignoreeof
-stty kill undef # unix-line-discard
-stty stop undef
-stty start undef
-stty werase undef # unix-word-rubout
-stty lnext $'\cQ'
+if [ -x /usr/bin/stty ]; then
+  stty kill undef # unix-line-discard
+  stty stop undef
+  stty start undef
+  stty werase undef # unix-word-rubout
+  stty lnext $'\cQ'
+fi
 if [ -x /usr/bin/xkbset ]; then
   xkbset nullify lock
 fi
