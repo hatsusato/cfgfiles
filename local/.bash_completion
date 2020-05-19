@@ -1,13 +1,12 @@
 #!/bin/bash
 
 emulate-complete() {
-  local cur prev words cword
+  local cur prev words cword opts=()
   _init_completion || return
-  set -- $(complete -p $words)
+  set -- $(complete -p "$words")
   [[ $1 == complete ]] || return
-  [[ ${@: -1} == $words ]] || return
+  [[ ${@: -1} == "$words" ]] || return
   shift
-  local opts=()
   while ((1 < $#)); do
     case $1 in
       -[abcdefgjksuv])
@@ -17,17 +16,17 @@ emulate-complete() {
         compopt -o $2 >/dev/null
         shift 2;;
       -F)
-        $2 $words $cur $prev
+        $2 "$words" "$cur" "$prev"
         return $?;;
       -[AGWCXPS])
         opts+=($1 $2)
         shift 2;;
       *)
-        echo ERROR: invalid complete: $(complete -p $words) >&2
+        echo ERROR: invalid complete: $(complete -p "$words") >&2
         return 1;;
     esac
   done
-  COMPREPLY=($(compgen ${opts[@]} -- $cur))
+  COMPREPLY=($(compgen ${opts[@]} -- "$cur"))
 }
 
 parse-split-words() {
@@ -51,11 +50,7 @@ parse-quote-words() {
       continue
     fi
     case $e in
-      [$IFS])
-        if [[ -n "$w" ]]; then
-          list+=("$w")
-          w=
-        fi;;
+      [$IFS]) [[ -n "$w" ]] && list+=("$w"); w=;;
       [\'\"]) q=$e; w+=$e;;
       [\|\&]) list=(); w=;;
       *) w+=$e;;
@@ -79,13 +74,13 @@ exist-alias() {
 }
 
 alias-complete() {
-  exist-alias $COMP_WORDS || return
+  exist-alias "$COMP_WORDS" || return
   replace-command "${BASH_ALIASES[$COMP_WORDS]}"
-  local comp=$(complete -p $COMP_WORDS 2>/dev/null)
+  local comp=$(complete -p "$COMP_WORDS" 2>/dev/null)
   if [[ -z $comp ]]; then
-    _completion_loader $COMP_WORDS
-  elif [[ $comp == *+( )-F+( )alias-complete?( *) ]]; then
-    complete -F _minimal -- $COMP_WORDS && return 124
+    _completion_loader "$COMP_WORDS"
+  elif [[ $comp == @(complete -F alias-complete )* ]]; then
+    complete -F _minimal -- "$COMP_WORDS" && return 124
   else
     emulate-complete
   fi
@@ -101,8 +96,9 @@ auto-completion-loader() {
 
 debug-complete() {
   local comp log=${DEBUG+/tmp/$USER/debug.log}
-  for comp in words point line cword; do
-    declare -p COMP_${comp^^}
-  done >>${log:-/dev/null}
-  echo >>${log:-/dev/null}
+  { for comp in words point line cword wordbreaks; do
+      declare -p COMP_${comp^^}
+    done
+    echo
+  } >>${log:-/dev/null}
 }
