@@ -9,8 +9,8 @@ fi
 if [ -x /usr/bin/xkbset ]; then
   xkbset nullify lock
 fi
-if command -v man-env >/dev/null; then
-  man-env
+if [ -x ~/.config/local/.man-init ]; then
+  ~/.config/local/.man-init
 fi
 
 #export GROFF_NO_SGR=1
