@@ -1,6 +1,6 @@
 #!/bin/bash
 
-emulate-complete() {
+complete-emulate() {
   local cur prev words cword opts=()
   _init_completion || return
   set -- $(complete -p "$words")
@@ -29,7 +29,7 @@ emulate-complete() {
   COMPREPLY=($(compgen ${opts[@]} -- "$cur"))
 }
 
-parse-split-words() {
+complete-split() {
   local i c w=
   for ((i=0; i<${#1}; ++i)); do
     c=${1:$i:1}
@@ -40,7 +40,7 @@ parse-split-words() {
   done
   list+=("$w")
 }
-parse-quote-words() {
+complete-parse() {
   local e w= q=
   list=()
   for e in "$@"; do
@@ -58,10 +58,10 @@ parse-quote-words() {
   done
   [[ -n "$w" ]] && list+=("$w")
 }
-replace-command() {
+complete-replace() {
   local list=()
-  parse-split-words "$1"
-  parse-quote-words "${list[@]}"
+  complete-split "$1"
+  complete-parse "${list[@]}"
   local line=${list[@]}
   COMP_LINE=${COMP_LINE/#$COMP_WORDS/$line}
   ((COMP_POINT += ${#line} - ${#COMP_WORDS}))
@@ -69,32 +69,32 @@ replace-command() {
   COMP_WORDS=("${list[@]}" "${COMP_WORDS[@]:1}")
 }
 
-exist-alias() {
+complete-alias-exists() {
   [[ -n $@ && -n ${BASH_ALIASES[$@]+x} ]]
 }
 
-alias-complete() {
-  exist-alias "$COMP_WORDS" || return
-  replace-command "${BASH_ALIASES[$COMP_WORDS]}"
+complete-alias() {
+  complete-alias-exists "$COMP_WORDS" || return
+  complete-replace "${BASH_ALIASES[$COMP_WORDS]}"
   local comp=$(complete -p "$COMP_WORDS" 2>/dev/null)
   if [[ -z $comp ]]; then
     _completion_loader "$COMP_WORDS"
-  elif [[ $comp == @(complete -F alias-complete )* ]]; then
+  elif [[ $comp == @(complete -F complete-alias )* ]]; then
     complete -F _minimal -- "$COMP_WORDS" && return 124
   else
-    emulate-complete
+    complete-emulate
   fi
 }
 
 auto-completion-loader() {
   __load_completion "$1" && return 124
-  if exist-alias "$1"; then
-    complete -F alias-complete -- "$1" && return 124
+  if complete-alias-exists "$1"; then
+    complete -F complete-alias -- "$1" && return 124
   fi
   complete -F _minimal -- "$1" && return 124
 } && complete -D -F auto-completion-loader
 
-debug-complete() {
+complete-debug() {
   local comp log=${DEBUG+/tmp/$USER/debug.log}
   { for comp in words point line cword wordbreaks; do
       declare -p COMP_${comp^^}
