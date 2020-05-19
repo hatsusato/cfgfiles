@@ -42,31 +42,36 @@ parse-split-words() {
   list+=("$w")
 }
 parse-quote-words() {
-  local list=() arg i c q=
-  for arg in "$@"; do
-    list+=("$arg")
-    if [[ $arg == *@(\'|\")* ]]; then
-      for ((i=0; i<${#arg}; ++i)); do
-        c=${arg:i:1}
-        [[ $c == @(\'|\") ]] || continue
-        [[ -z $q || $c == $q ]] || continue
-        q=${c#$q}
-      done
+  local e w= q=
+  list=()
+  for e in "$@"; do
+    if [[ -n $q ]]; then
+      w+=$e
+      [[ $q == $e ]] && q=
+      continue
     fi
-    [[ -z $q ]] || continue
-    quotes+=("${list[*]}")
-    list=()
+    case $e in
+      [$IFS])
+        if [[ -n "$w" ]]; then
+          list+=("$w")
+          w=
+        fi;;
+      [\'\"]) q=$e; w+=$e;;
+      [\|\&]) list=(); w=;;
+      *) w+=$e;;
+    esac
   done
-  [[ -z $q ]] || quotes+=("${list[*]}")
+  [[ -n "$w" ]] && list+=("$w")
 }
 replace-command() {
-  local quotes=()
-  parse-quote-words "$@"
-  local line=${quotes[@]}
+  local list=()
+  parse-split-words "$1"
+  parse-quote-words "${list[@]}"
+  local line=${list[@]}
   COMP_LINE=${COMP_LINE/#$COMP_WORDS/$line}
   ((COMP_POINT += ${#line} - ${#COMP_WORDS}))
-  ((COMP_CWORD += ${#quotes[@]} - 1))
-  COMP_WORDS=("${quotes[@]}" "${COMP_WORDS[@]:1}")
+  ((COMP_CWORD += ${#list[@]} - 1))
+  COMP_WORDS=("${list[@]}" "${COMP_WORDS[@]:1}")
 }
 
 exist-alias() {
@@ -75,7 +80,7 @@ exist-alias() {
 
 alias-complete() {
   exist-alias $COMP_WORDS || return
-  replace-command ${BASH_ALIASES[$COMP_WORDS]}
+  replace-command "${BASH_ALIASES[$COMP_WORDS]}"
   local comp=$(complete -p $COMP_WORDS 2>/dev/null)
   if [[ -z $comp ]]; then
     _completion_loader $COMP_WORDS
