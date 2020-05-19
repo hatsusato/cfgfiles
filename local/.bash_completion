@@ -30,6 +30,17 @@ emulate-complete() {
   COMPREPLY=($(compgen ${opts[@]} -- $cur))
 }
 
+parse-split-words() {
+  local i c w=
+  for ((i=0; i<${#1}; ++i)); do
+    c=${1:$i:1}
+    case $c in
+      [$COMP_WORDBREAKS]) list+=("$w" "$c"); w=;;
+      *) w+=$c;;
+    esac
+  done
+  list+=("$w")
+}
 parse-quote-words() {
   local list=() arg i c q=
   for arg in "$@"; do
