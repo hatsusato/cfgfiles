@@ -9,9 +9,6 @@ fi
 if [ -x /usr/bin/xkbset ]; then
   xkbset nullify lock
 fi
-if [ -x ~/.config/local/.man-init ]; then
-  ~/.config/local/.man-init
-fi
 
 #export GROFF_NO_SGR=1
 export LESS='-M -R -x4'
