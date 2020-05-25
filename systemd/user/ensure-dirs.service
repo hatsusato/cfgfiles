@@ -1,0 +1,9 @@
+[Unit]
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=%h/.local/bin/ensure-dirs
+
+[Install]
+WantedBy=multi-user.target
