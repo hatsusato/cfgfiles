@@ -29,4 +29,7 @@ if [ -f "$HOME"/.config/local/funcs.sh ]; then
   alias apt-depends='apt-cache-recurse depends'
   alias apt-rdepends='apt-cache-recurse rdepends'
   alias p='background evince'
+  if [ -x /usr/bin/tput ] && tput setaf 1 &>/dev/null; then
+    alias man='man-color'
+  fi
 fi
