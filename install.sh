@@ -12,7 +12,7 @@ main() {
   local src dst
   for src; do
     [[ -f $src ]] || continue
-    dst=$HOME/.config/$src
+    dst=$HOME/$src
     if [[ -f $dst ]]; then
       diff -q "$src" "$dst" &>/dev/null && continue
     fi

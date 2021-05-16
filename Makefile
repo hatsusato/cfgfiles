@@ -1,7 +1,6 @@
 #!/usr/bin/make -f
 
-dirs := fcitx git local systemd xkb
-files := $(shell git ls-files $(dirs)) user-dirs.dirs
+files := $(shell git ls-files .config)
 install/files := $(files:%=install/%)
 clean/files := $(shell find . -name '*.bak')
 
