@@ -1,8 +1,0 @@
-[Unit]
-
-[Service]
-Type=forking
-ExecStart=%h/.local/bin/xkb-monitor
-
-[Install]
-WantedBy=multi-user.target

@@ -1,9 +1,0 @@
-[Unit]
-
-[Service]
-Type=oneshot
-RemainAfterExit=yes
-ExecStart=%h/.local/bin/xkb-load
-
-[Install]
-WantedBy=multi-user.target
