@@ -2,13 +2,17 @@
 
 dirs := fcitx git local systemd xkb
 files := $(shell git ls-files $(dirs)) user-dirs.dirs
-prefix := $(HOME)/.config
-target := $(addprefix $(prefix)/,$(files))
-mode = -m644
+install/files := $(files:%=install/%)
+clean/files := $(shell find . -name '*.bak')
 
 .PHONY: all
-all: $(target)
+all:
+	@./install.sh $(files)
 
-$(prefix)/local/.man-init: mode = -m755
-$(target): $(prefix)/%: %
-	@install -D $(mode) -v -T $< $@
+.PHONY: $(install/files)
+$(install/files): install/%: %
+	@./install.sh $*
+
+.PHONY: clean
+clean:
+	$(RM) $(clean/files)
