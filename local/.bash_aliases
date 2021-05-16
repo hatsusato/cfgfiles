@@ -1,14 +1,16 @@
 #!/bin/bash
 
 alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
+alias ....='cd ../..'
+alias ......='cd ../../..'
 alias apt-depends='apt-cache-recurse depends'
 alias apt-rdepends='apt-cache-recurse rdepends'
 alias apt-upgrade='sudo apt update && sudo apt upgrade'
 alias asciicode='man 7 ascii'
 alias caps-to-ctrl='setxkbmap -option ctrl:nocaps'
 alias cgrep='grep --color=always'
+alias dropbox-conflict='find ~/Dropbox -name "*競合*"'
+alias dropbox-resolve='find ~/Dropbox -name "*競合*" -delete'
 alias e='spacemacs-client -cn'
 alias gocryptfs='gocryptfs -extpass pinentry-askpass'
 alias j='jobs'
