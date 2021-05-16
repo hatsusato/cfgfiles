@@ -13,7 +13,6 @@ alias e='spacemacs-client -cn'
 alias gocryptfs='gocryptfs -extpass pinentry-askpass'
 alias j='jobs'
 alias o='xdg-open'
-alias p='background evince'
 alias private-mount='gocryptfs ~/Dropbox/Private ~/Private'
 alias private-umount='fusermount -u ~/Private'
 alias reload-aliases='source ~/.bash_aliases'
@@ -29,4 +28,5 @@ if [ -f "$HOME"/.config/local/funcs.sh ]; then
   source "$HOME"/.config/local/funcs.sh
   alias apt-depends='apt-cache-recurse depends'
   alias apt-rdepends='apt-cache-recurse rdepends'
+  alias p='background evince'
 fi

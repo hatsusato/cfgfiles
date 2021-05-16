@@ -6,3 +6,8 @@ apt-cache-recurse() {
   filter=(grep -v -e '^ ' -e '^<' -e ':i386$' -e '^Reverse Depends:$')
   apt-cache --recurse ${flags[@]/#/--no-} "$@" | "${filter[@]}" | sort -u
 }
+
+backgroud() {
+  (($#)) || exit
+  exec -a "$1" "$@" &>/dev/null &
+}
