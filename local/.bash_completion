@@ -1,7 +1,8 @@
 #!/bin/bash
 
 complete-emulate() {
-  local cur prev words cword opts=()
+  local cur prev words cword
+  local -a gen=(compgen)
   _init_completion || return
   set -- $(complete -p "$words")
   [[ $1 == complete ]] || return
@@ -10,27 +11,29 @@ complete-emulate() {
   while ((1 < $#)); do
     case $1 in
       -[abcdefgjksuv])
-        opts+=($1)
+        gen+=("$1")
         shift;;
       -o)
-        compopt -o $2 >/dev/null
+        compopt -o "$2" >/dev/null
         shift 2;;
       -F)
-        $2 "$words" "$cur" "$prev"
+        "$2" "$words" "$cur" "$prev"
         return $?;;
       -[AGWCXPS])
-        opts+=($1 $2)
+        gen+=("$1" "$2")
         shift 2;;
       *)
         echo ERROR: invalid complete: $(complete -p "$words") >&2
         return 1;;
     esac
   done
-  COMPREPLY=($(compgen ${opts[@]} -- "$cur"))
+  gen+=(-- "$cur")
+  COMPREPLY=($("${gen[@]}"))
 }
 
 complete-split() {
-  local i c w=
+  local -i i
+  local c w=
   for ((i=0; i<${#1}; ++i)); do
     c=${1:$i:1}
     case $c in
@@ -43,7 +46,7 @@ complete-split() {
 complete-parse() {
   local e w= q=
   list=()
-  for e in "$@"; do
+  for e; do
     if [[ -n $q ]]; then
       w+=$e
       [[ $q == $e ]] && q=
