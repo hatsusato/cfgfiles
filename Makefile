@@ -2,7 +2,8 @@
 
 files := $(shell git ls-files .config)
 install/files := $(files:%=install/%)
-clean/files := $(shell find . -name '*.bak')
+patch/files := $(wildcard *.patch)
+clean/files := $(patch/files:%=clean/%)
 
 .PHONY: all
 all:
@@ -12,6 +13,8 @@ all:
 $(install/files): install/%: %
 	@./install.sh $*
 
-.PHONY: clean
+.PHONY: clean $(clean/files)
 clean:
-	$(RM) $(clean/files)
+	$(RM) $(patch/files)
+$(clean/files): clean/%:
+	$(RM) $*
