@@ -1,47 +1,49 @@
 #!/bin/bash
 
 complete-emulate() {
-  local cur prev words cword
-  local -a gen=(compgen)
+  local cur prev words cword cmd
+  local -a list
   _init_completion || return
-  set -- $(complete -p "$words")
-  [[ $1 == complete ]] || return
-  [[ ${@: -1} == "$words" ]] || return
+  cmd=${words[0]}
+  set -- $(complete -p "$cmd" 2>/dev/null)
+  [[ $1 == complete && ${@:$#} == $cmd ]] || return
   shift
   while ((1 < $#)); do
     case $1 in
       -[abcdefgjksuv])
-        gen+=("$1")
+        list+=($1)
         shift;;
       -o)
         compopt -o "$2" >/dev/null
         shift 2;;
       -F)
-        "$2" "$words" "$cur" "$prev"
-        return $?;;
+        "$2" "$cmd" "$cur" "$prev" && :
+        return;;
       -[AGWCXPS])
-        gen+=("$1" "$2")
+        list+=($1 "$2")
         shift 2;;
       *)
-        echo ERROR: invalid complete: $(complete -p "$words") >&2
+        echo ERROR: invalid complete: $(complete -p "$cmd") >&2
         return 1;;
     esac
   done
-  gen+=(-- "$cur")
-  COMPREPLY=($("${gen[@]}"))
+  list=($(compgen "${list[@]}" -- "$cur"))
+  ((${#list[@]})) && COMPREPLY=($(printf '%q\n' "${list[@]}"))
 }
 
 complete-split() {
-  local -i i
-  local c w=
-  for ((i=0; i<${#1}; ++i)); do
-    c=${1:$i:1}
+  local s=$1 c w=
+  while [[ -n $s ]]; do
+    c=${s:0:1}
+    s=${s:1}
     case $c in
-      [$COMP_WORDBREAKS]) list+=("$w" "$c"); w=;;
+      [$COMP_WORDBREAKS])
+        list+=("$w" "$c")
+        w=;;
       *) w+=$c;;
     esac
   done
-  list+=("$w")
+  [[ -n $w ]] && list+=("$w")
 }
 complete-parse() {
   local e w= q=
@@ -53,9 +55,12 @@ complete-parse() {
       continue
     fi
     case $e in
-      [$IFS]) [[ -n "$w" ]] && list+=("$w"); w=;;
-      [\'\"]) q=$e; w+=$e;;
-      [\|\&]) list=(); w=;;
+      [$IFS]) [[ -n "$w" ]] && list+=("$w")
+              w=;;
+      [\'\"]) q=$e
+              w+=$e;;
+      [\|\&]) list=()
+              w=;;
       *) w+=$e;;
     esac
   done
