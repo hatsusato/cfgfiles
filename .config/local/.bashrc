@@ -9,9 +9,6 @@ fi
 if [ -x /usr/bin/xkbset ]; then
   xkbset nullify lock
 fi
-if [ -x $HOME/.config/local/startup.sh ]; then
-  $HOME/.config/local/startup.sh
-fi
 if [ -x /usr/bin/tput ] && tput setaf 1 &>/dev/null; then
   export PS1='\[\033[01;31m\]$?\[\033[00m\]'$PS1
 else
